@@ -14,6 +14,8 @@ $_SESSION['user_type'] = $user_info['u_type'];
 if ($_SESSION['user_id'] != 0) {
     if ($user_info["u_type"] == "admin") {
         header('Location:admin/index.php');
+    } elseif($user_info["u_type"] == "staff"){
+        header('Location:staff/index.php');
     }
 } else {
     header('Location:index.php');
