@@ -36,6 +36,8 @@ $connection->connectToDatabase();
 
     <!-- Custom Theme Style -->
     <link href="../template/build/css/custom.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="../template/css/jquery-confirm.min.css">
   </head>
 
   <body class="nav-md">
@@ -119,11 +121,11 @@ $connection->connectToDatabase();
                           <div class="card-box table-responsive">
                             <?php 
                             $query = "SELECT 
-                            u.u_id, u.u_name, u.sur_name, u.u_code 
+                            u.u_id, u.u_name, u.sur_name, u.u_code, u.status 
                             FROM 
                             `users` u
                             WHERE 
-                            u.status = '0'
+                            1
                             GROUP BY u.u_id
                             ORDER BY u.u_name DESC";
                             $result = mysqli_query($connection->myconn, $query);
@@ -134,6 +136,7 @@ $connection->connectToDatabase();
                                     <th>NAME</th>
                                     <th>SURNAME</th>
                                     <th>UCODE</th>
+                                    <th>STATUS</th>
                                     <th>EDIT</th>
                                     <th>DELETE</th>
                                 </tr>
@@ -144,8 +147,23 @@ $connection->connectToDatabase();
                                         <td style="font-size: 12px;text-align: left"><?php echo $row['u_name']; ?></td>
                                         <td style="font-size: 12px;text-align: left"><?php echo $row['sur_name']; ?></td>
                                         <td style="font-size: 12px;text-align: center"><?php echo $row['u_code']; ?></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td style="font-size: 12px;text-align: center">
+                                          <?php if($row['status'] == '1'){ ?>
+                                          <span style="color:red">INACTIVE</span>
+                                          <?php } else { ?>
+                                            <span style="color:green">ACTIVE</span>
+                                          <?php } ?>
+                                        </td>
+                                        <td style="font-size: 12px;text-align: center">
+                                          <?php if($row['status'] == '0'){ ?>
+                                          <a style="cursor:pointer;color:#5777ba !important" class="btnup" id="" name="" onClick="window.open('user_edit.php?u_id=<?php echo $row['u_id']; ?>');"><i class="fa fa-pencil" style="font-size: 20px"></i></a>
+                                          <?php } ?>
+                                        </td>
+                                        <td style="font-size: 12px;text-align: center">
+                                        <?php if($row['status'] == '0'){ ?>
+                                        <a style="cursor:pointer;color:#5777ba !important" class="btnup" id="" name="" onclick="delete_user('<?php echo $row['u_id']; ?>');"><i class="fa fa-trash" style="font-size: 20px;color:red"></i></a>
+                                        <?php } ?>
+                                        </td>
                                     </tr>
                                 <?php } ?>
                             </tbody>
@@ -210,6 +228,43 @@ $connection->connectToDatabase();
     <!-- Custom Theme Scripts -->
     <script src="../template/build/js/custom.min.js"></script>
 
+    <script src="../template/js/jquery-confirm.min.js"></script>
+    <script>
+      function delete_user(id){
+        $.confirm({
+            title: 'Confirm?',
+            content: 'Are you sure do you want to remove this item ?',
+            type: 'green',
+            buttons: {
+                Okey: {
+                    text: 'Yes',
+                    btnClass: 'btn-blue',
+                    keys: ['enter'],
+                    action: function () {
+                      $.ajax({
+                      url: 'delete_user.php',
+                      type: 'POST',
+                      data: {
+                        u_id: id
+                      },
+                      success: function(data){
+                        console.log(data);
+                      }
+                    });
+                    }
+                },
+                cancel: {
+                    text: 'No',
+                    btnClass: 'btn-red',
+                    keys: ['esc'],
+                    action: function () {
+
+                    }
+                }
+            }
+        });
+      }
+    </script>                             
   </body>
 </html>
 <?php 
