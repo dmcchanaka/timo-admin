@@ -132,7 +132,7 @@ $connection->connectToDatabase();
                                 <div class="x_content">
                                     <div class="row">
                                         <div class="col-sm-12">
-                                        <form class="form-horizontal form-label-left" method="post" action="save_attendance.php">
+                                        <form class="form-horizontal form-label-left" method="post" action="update_attendance.php">
                                         <?php 
                                         $query = "SELECT 
                                         ua.ua_id, u.u_name, ua.year, ua.month 
@@ -177,7 +177,9 @@ $connection->connectToDatabase();
                                             $interval = DateInterval::createFromDateString('1 day');
                                             $daterange = new DatePeriod($start_date, $interval ,$end_date);
                                             ?>
-                                            <table class="table table-striped jambo_table bulk_action" id="route_details">
+                                            <input type="hidden" id="year" name="year" value="<?php echo $row['year']; ?>" />
+                                            <input type="hidden" id="month" name="month" value="<?php echo $row['month']; ?>" />
+                                             <table class="table table-striped jambo_table bulk_action" id="route_details">
                                                 <thead>
                                                     <tr>
                                                         <th>DATE</th>
@@ -195,35 +197,64 @@ $connection->connectToDatabase();
                                                     $count = 0;
                                                     foreach($daterange as $date1){
                                                         $count++;
+
+                                                        $query_details = "SELECT 
+                                                        uad.year, 
+                                                        uad.month, 
+                                                        uad.date, 
+                                                        uad.start_time, 
+                                                        uad.end_tme,
+                                                        TIMEDIFF(uad.end_tme, uad.start_time) as total_time,
+                                                        uad.night, 
+                                                        uad.illness, 
+                                                        uad.vacation, 
+                                                        uad.holiday, 
+                                                        uad.notes
+                                                        FROM 
+                                                        `user_attendance` ua
+                                                        INNER JOIN 
+                                                        `user_attendance_details` uad ON uad.ua_id = ua.ua_id
+                                                        INNER JOIN
+                                                        `users` u ON u.u_id = ua.u_id
+                                                        WHERE 
+                                                        ua.ua_status = '0'
+                                                        AND ua.ua_id = '".$_REQUEST['att_id']."'
+                                                        AND u.u_id = '".$_SESSION['user_id']."'
+                                                        AND uad.date = '".$date1->format('Y-m-d')."'
+                                                        GROUP BY uad.utd_id
+                                                        ORDER BY uad.utd_id ASC";
+                                                        $result_details = mysqli_query($connection->myconn, $query_details);
+                                                        $row = mysqli_fetch_assoc($result_details);
                                                     ?>
                                                     <tr>
                                                         <td>
                                                             <input type="text" id="date_<?php echo $count; ?>" name="date_<?php echo $count; ?>" value="<?php echo $date1->format('Y-m-d'); ?>" readonly />
                                                         </td>
                                                         <td>
-                                                            <input type="time" id="start_time_<?php echo $count; ?>" name="start_time_<?php echo $count; ?>" />
+                                                            <input type="time" id="start_time_<?php echo $count; ?>" name="start_time_<?php echo $count; ?>" value="<?php echo $row['start_time'] ?>" />
                                                         </td>
                                                         <td>
-                                                            <input type="time" id="end_time_<?php echo $count; ?>" name="end_time_<?php echo $count; ?>" />
+                                                            <input type="time" id="end_time_<?php echo $count; ?>" name="end_time_<?php echo $count; ?>" value="<?php echo $row['end_tme'] ?>" />
                                                         </td>
                                                         <td>
-                                                            <input type="checkbox" id="night_<?php echo $count; ?>" name="night_<?php echo $count; ?>" />
+                                                            <input type="checkbox" id="night_<?php echo $count; ?>" name="night_<?php echo $count; ?>" <?php if(isset($row['night']) && $row['night'] == 1){ echo 'checked'; } else {echo ''; }; ?> />
                                                         </td>
                                                         <td>
-                                                            <input type="checkbox" id="illness_<?php echo $count; ?>" name="illness_<?php echo $count; ?>" />
+                                                            <input type="checkbox" id="illness_<?php echo $count; ?>" name="illness_<?php echo $count; ?>" <?php if(isset($row['illness']) && $row['illness'] == 1){ echo 'checked'; } else {echo ''; }; ?> />
                                                         </td>
                                                         <td>
-                                                            <input type="checkbox" id="vacation_<?php echo $count; ?>" name="vacation_<?php echo $count; ?>" />
+                                                            <input type="checkbox" id="vacation_<?php echo $count; ?>" name="vacation_<?php echo $count; ?>" <?php if(isset($row['vacation']) && $row['vacation'] == 1){ echo 'checked'; } else {echo ''; }; ?> />
                                                         </td>
                                                         <td>
-                                                            <input type="checkbox" id="holliday_<?php echo $count; ?>" name="holliday_<?php echo $count; ?>" />
+                                                            <input type="checkbox" id="holliday_<?php echo $count; ?>" name="holliday_<?php echo $count; ?>" <?php if(isset($row['holiday']) && $row['holiday'] == 1){ echo 'checked'; } else {echo ''; }; ?> />
                                                         </td>
                                                         <td>
-                                                            <textarea id="notes_<?php echo $count; ?>" name="notes_<?php echo $count; ?>" rows="1"></textarea>
+                                                            <textarea id="notes_<?php echo $count; ?>" name="notes_<?php echo $count; ?>" rows="1"><?php if(isset($row['notes'])){ echo $row['notes']; } ?></textarea>
                                                         </td>
                                                     </tr>
                                                     <?php } ?>
                                                     <input type="hidden" id="item_count" name="item_count" value="<?php echo $count; ?>" />
+                                                    <input type="hidden" id="attendance_id" name="attendance_id" value="<?php echo $_REQUEST['att_id']; ?>" />
                                                 </tbody>
                                             </table>
                                             <div class="form-group" style="text-align:left">
