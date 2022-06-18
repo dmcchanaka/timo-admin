@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../library/config.php';
+if ($_SESSION['user_type'] == 'admin') {
 $connection = new createConnection();
 $connection->connectToDatabase();
 
@@ -50,4 +51,7 @@ if (mysqli_num_rows($result) != 0) {
     <div style="text-align: center;color: red"><span>No Record Found</span></div>
 <?php }
 $connection->close();
+} else {
+    header('Location:../index.php');
+}
 ?>

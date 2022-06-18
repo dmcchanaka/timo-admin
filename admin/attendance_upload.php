@@ -1,6 +1,8 @@
 <?php 
+session_start();
 require_once '../library/config.php';
 require_once '../library/functions.php';
+if ($_SESSION['user_type'] == 'admin') {
 $connection = new createConnection();
 $connection->connectToDatabase();
 
@@ -21,12 +23,6 @@ if (isset($_FILES['attendance_file'])) {
                 $rows[] = array_combine($header_values, $r);
             }
         }
-
-        // echo date("H:i:s", ExcelToPHP($rows[0]['day_01_time_start']));
-
-        // echo '<pre>';
-        // print_r($rows);
-        // echo '</pre>';
 
         $all_query = true;
         mysqli_query($connection->myconn, "SET AUTOCOMMIT=0");
@@ -160,31 +156,6 @@ function ExcelToPHP($dateValue = 0, $ExcelBaseDate = 1900) {
     return $returnValue;
 }
 
-// if($_FILES['attendance_file']['name']) {
-//     $arrFileName = explode('.', $_FILES['attendance_file']['name']);
-//     if ($arrFileName[1] == 'xlsx') {
-//         $handle = fopen($_FILES['attendance_file']['tmp_name'], "r");
-
-//         $excelUrl = $_FILES['attendance_file']['tmp_name'];
-//         $header_values = $rows = [];
-//         $headers = [];
-//         if ($xlsx = SimpleXLSX::parse($excelUrl)) {
-//             foreach ($xlsx->rows() as $k => $r) {
-//                 if ($k === 0) {
-//                     $header_values = $r;
-//                     continue;
-//                 }
-//                 if (count($r) === count($header_values)) {
-//                     $rows[] = array_combine($header_values, $r);
-//                     $new_array[] = $r;
-//                 }
-//             }
-
-//             echo '<pre>';
-//             print_r($rows);
-//             echo '</pre>';
-//         } else {
-//             echo SimpleXLSX::parseError();
-//         }
-//     }
-// }
+} else {
+    header('Location:../index.php');
+}

@@ -2,6 +2,7 @@
 session_start();
 require_once '../library/config.php';
 require_once '../library/functions.php';
+if ($_SESSION['user_type'] == 'admin') {
 $connection = new createConnection();
 $connection->connectToDatabase();
 ?>
@@ -313,3 +314,7 @@ $connection->connectToDatabase();
 </body>
 
 </html>
+<?php 
+} else {
+    header('Location:../index.php');
+}

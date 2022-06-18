@@ -2,7 +2,7 @@
 session_start();
 require_once '../library/config.php';
 require_once '../library/functions.php';
-if ($_SESSION['user_type'] == 'admin') {
+if ($_SESSION['user_type'] == 'staff') {
 $connection = new createConnection();
 $connection->connectToDatabase();
 ?>
@@ -64,7 +64,7 @@ $connection->connectToDatabase();
             <br />
 
             <!-- sidebar menu -->
-            <?php require_once('../layout/sidebar.php'); ?>
+            <?php require_once('../layout/staff_sidebar.php'); ?>
             <!-- /sidebar menu -->
 
             <!-- /menu footer buttons -->
@@ -194,6 +194,12 @@ $connection->connectToDatabase();
                                         <tbody>
                                         <?php while ($row = mysqli_fetch_assoc($result_details)) { ?>
                                             <tr>
+                                                <!-- <td style="font-size: 12px;text-align: center"><?php echo $row['year']; ?></td>
+                                                <td style="font-size: 12px;text-align: center"><?php
+                                                    $monthNum  = $row['month'];
+                                                    $dateObj   = DateTime::createFromFormat('!m', $monthNum);
+                                                    echo $monthName = $dateObj->format('F'); 
+                                                ?></td> -->
                                                 <td style="font-size: 12px;text-align: left"><?php 
                                                 $fmt = datefmt_create("de_DE", IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'Europe/Berlin', IntlDateFormatter::GREGORIAN);
                                                 echo datefmt_format($fmt , strtotime($row['date']));

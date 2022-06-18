@@ -92,15 +92,69 @@ $connection->connectToDatabase();
 
         <!-- page content -->
         <div class="right_col" role="main">
-          <!-- top tiles -->
-          <div class="row" style="display: inline-block;" >
-          
-        </div>
-          <!-- /top tiles -->
+            <div class="">
+                <div class="page-title">
+                    <div class="title_left">
+                        <h3><small>Attendance View</small></h3>
+                    </div>
 
-          
+                    <div class="title_right"></div>
+                </div>
+                <div class="clearfix"></div>
 
-
+                <div class="row" style="display: block;">
+                    <div class="col-md-12 col-sm-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <form class="form-horizontal form-label-left" method="post">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">USER</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control" id="u_id" name="u_id">
+                                                <option value="0">SELECT USER</option>
+                                                <?php dataFunctions::employees($connection->myconn, $_SESSION['user_id']); ?>
+                                                </select>
+                                            </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">YEAR MONTH</label>
+                                            <div class="col-sm-9">
+                                            <input type="month" id="month" name="month" class="form-control" placeholder="Month">
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label"></label>
+                                            <div class="col-sm-9">
+                                            </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                            <label class="col-sm-9 col-form-label"></label>
+                                            <div class="col-sm-3">
+                                                <button class="btn btn-success" type="button" onclick="search();">Search</button>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                                <div id="attendance_info" style="text-align: center" class="table-responsive"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
           
         </div>
         <!-- /page content -->
@@ -151,7 +205,16 @@ $connection->connectToDatabase();
 
     <!-- Custom Theme Scripts -->
     <script src="../template/build/js/custom.min.js"></script>
-	
+	<script type="text/javascript">
+        function search(page){
+            $('#attendance_info').html('<p><img width="100px" src="../images/loader.gif"  /></p>');
+            $('#attendance_info').load("search_attendance.php",{
+                'u_id':$('#u_id').val(),
+                'month':$('#month').val(),
+                'page':page
+            });
+        }
+    </script>
   </body>
 </html>
 <?php 

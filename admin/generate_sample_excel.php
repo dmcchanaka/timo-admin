@@ -1,6 +1,8 @@
 <?php 
+session_start();
 require_once '../library/config.php';
 require_once '../library/functions.php';
+if ($_SESSION['user_type'] == 'admin') {
 $connection = new createConnection();
 $connection->connectToDatabase();
 
@@ -63,4 +65,6 @@ $response['url'] = dataFunctions::getBaseUrl(trim($filename));
 echo json_encode($response);
 exit();
 
-
+} else {
+    header('Location:../index.php');
+}

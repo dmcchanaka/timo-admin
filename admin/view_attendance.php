@@ -2,6 +2,7 @@
 session_start();
 require_once '../library/config.php';
 require_once '../library/functions.php';
+if ($_SESSION['user_type'] == 'admin') {
 $connection = new createConnection();
 $connection->connectToDatabase();
 ?>
@@ -113,7 +114,7 @@ $connection->connectToDatabase();
                                             <div class="col-sm-9">
                                                 <select class="form-control" id="u_id" name="u_id">
                                                 <option value="0">SELECT USER</option>
-                                                <?php dataFunctions::employees($connection->myconn); ?>
+                                                <?php dataFunctions::employees($connection->myconn,''); ?>
                                                 </select>
                                             </div>
                                             </div>
@@ -216,3 +217,7 @@ $connection->connectToDatabase();
     </script>
   </body>
 </html>
+<?php 
+} else {
+  header('Location:../index.php');
+}

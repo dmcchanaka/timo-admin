@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once '../library/config.php';
-if ($_SESSION['user_type'] == 'admin') {
+if ($_SESSION['user_type'] == 'staff') {
 $connection = new createConnection();
 $connection->connectToDatabase();
 
@@ -26,6 +26,7 @@ INNER JOIN
 `users` u ON u.u_id = ua.u_id
 WHERE 
 ua.ua_status = '0' $user $year $month
+AND u.u_id = '".$_SESSION['user_id']."'
 GROUP BY ua.ua_id
 ORDER BY ua.ua_id DESC";
 $result = mysqli_query($connection->myconn, $query);
@@ -39,6 +40,7 @@ if (mysqli_num_rows($result) != 0) {
                 <th>YEAR</th>
                 <th>MONTH</th>
                 <th>VIEW</th>
+                <th>EDIT</th>
             </tr>
         </thead>
         <tbody>
@@ -53,7 +55,10 @@ if (mysqli_num_rows($result) != 0) {
                         echo $monthName = $dateObj->format('F'); 
                      ?></td>
                     <td>
-                        <a style="cursor:pointer;color:#5777ba !important" class="btnup" id="" name="" onClick="window.open('attendance_details.php?att_id=<?php echo $row['ua_id']; ?>');"><i class="fa fa-list-ul" style="font-size: 25px"></i></a>
+                        <a style="cursor:pointer;color:#5777ba !important" class="btnup" id="" name="" onClick="window.open('attendance_details.php?att_id=<?php echo $row['ua_id']; ?>');"><i class="fa fa-list-ul" style="font-size: 20px"></i></a>
+                    </td>
+                    <td>
+                        <a style="cursor:pointer;color:#5777ba !important" class="btnup" id="" name="" onClick="window.open('attendance_edit.php?att_id=<?php echo $row['ua_id']; ?>');"><i class="fa fa-pencil" style="font-size: 20px"></i></a>
                     </td>
                 </tr>
             <?php } ?>

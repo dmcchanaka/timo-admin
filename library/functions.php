@@ -26,8 +26,12 @@ class dataFunctions {
         return $user_info;
     }
 
-    public static function employees($mycon) {
-        $query = "SELECT u_id, u_name, u_code FROM users u WHERE u.status = '0' AND u.u_tp_id = '2' ORDER BY u_name";
+    public static function employees($mycon, $user_id) {
+        $user = "";
+        if($user_id !=""){
+            $user = "AND u.u_id ='$user_id'";
+        }
+        $query = "SELECT u_id, u_name, u_code FROM users u WHERE u.status = '0' AND u.u_tp_id = '2' $user ORDER BY u_name";
         $result = mysqli_query($mycon, $query);
         while($row = mysqli_fetch_assoc($result)){
             echo '<option value='.$row['u_id'].'>'.$row['u_name'].' - (' .$row['u_code']. ') '.'</option>';

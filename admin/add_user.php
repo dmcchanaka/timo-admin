@@ -1,6 +1,7 @@
 <?php 
 session_start();
 require_once '../library/config.php';
+if ($_SESSION['user_type'] == 'admin') {
 $connection = new createConnection();
 $connection->connectToDatabase();
 
@@ -25,3 +26,7 @@ if ($all_query) {
     $_SESSION['status'] = 0;
 }
 header("Location: user_registraton.php");
+
+} else {
+    header('Location:../index.php');
+}
