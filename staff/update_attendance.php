@@ -70,7 +70,7 @@ if ($_SESSION['user_type'] == 'staff') {
                 $ck_details_result = mysqli_query($connection->myconn, $ck_details_query);
                 if (mysqli_num_rows($ck_details_result) == 0) {
                     //INSERT ATT DETAILS
-                    echo $query_details = "INSERT INTO user_attendance_details (ua_id,u_id,`year`,`month`,`day`,`date`,start_time,end_tme,night,illness,vacation,holiday,notes) VALUES ('$last_attendance_id','" . $row_user['u_id'] . "','" . $year . "','" . $month . "','" . date('d', strtotime($_REQUEST['date_' . $i])) . "','" . $_REQUEST['date_' . $i] . "','$timeStart','$timeEnd','$night','$illness','$vacation','$holiday','$notes')";
+                    $query_details = "INSERT INTO user_attendance_details (ua_id,u_id,`year`,`month`,`day`,`date`,start_time,end_tme,night,illness,vacation,holiday,notes) VALUES ('$last_attendance_id','" . $row_user['u_id'] . "','" . $year . "','" . $month . "','" . date('d', strtotime($_REQUEST['date_' . $i])) . "','" . $_REQUEST['date_' . $i] . "','$timeStart','$timeEnd','$night','$illness','$vacation','$holiday','$notes')";
                     $result_details = mysqli_query($connection->myconn, $query_details) or die(mysqli_error($connection->myconn)) ? null : $all_query = false;
                 } else {
                     $row_attendance_details = mysqli_fetch_assoc($ck_details_result);
