@@ -65,7 +65,7 @@ if ($_SESSION['user_type'] == 'staff') {
                 $notes = "";
             }
 
-            if ($_REQUEST['start_time_' . $i] != "" && $_REQUEST['end_time_' . $i] != "") {
+            if($_REQUEST['start_time_'.$i]!="" || $_REQUEST['end_time_'.$i]!="" || (isset($_REQUEST['night_'.$i]) && $_REQUEST['night_'.$i]== 'on') || (isset($_REQUEST['illness_'.$i]) && $_REQUEST['illness_'.$i]== 'on') || (isset($_REQUEST['vacation_'.$i]) && $_REQUEST['vacation_'.$i]== 'on') || (isset($_REQUEST['holliday_'.$i]) && $_REQUEST['holliday_'.$i]== 'on') || $_REQUEST['notes_'.$i] != ''){
                 $ck_details_query = "SELECT * FROM user_attendance_details WHERE u_id='" . $row_user['u_id'] . "' AND ua_id='$last_attendance_id' AND `date`='" . $_REQUEST['date_' . $i] . "'";
                 $ck_details_result = mysqli_query($connection->myconn, $ck_details_query);
                 if (mysqli_num_rows($ck_details_result) == 0) {

@@ -138,9 +138,10 @@ $connection->connectToDatabase();
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                            <label class="col-sm-9 col-form-label"></label>
-                                            <div class="col-sm-3">
+                                            <label class="col-sm-6 col-form-label"></label>
+                                            <div class="col-sm-6">
                                                 <button class="btn btn-success" type="button" onclick="search();">Search</button>
+                                                <button class="btn btn-success" type="button" onclick="exportExcel();">Export Excel</button>
                                             </div>
                                             </div>
                                         </div>
@@ -213,6 +214,36 @@ $connection->connectToDatabase();
                 'month':$('#month').val(),
                 'page':page
             });
+        }
+
+        function exportExcel(){
+          if($('#month').val()==""){
+                alert('Please select Correct Month')
+            } else {
+              $.ajax({
+                  url: 'generate_attendance_excel.php',
+                  data: {
+                      'month':$('#month').val(),
+                      'u_id':$('#u_id').val(),
+                  },
+                  beforeSend: function() {
+                    $('#attendance_info').html('<p><img width="100px" src="../images/loader.gif"  /></p>');
+                  },
+                  success: function(data) {
+                      console.log(data);
+                      var arr = JSON.parse(data);
+                      if(arr.status == '1'){
+                          $('#success').show('slow');
+                          $('#error').hide('slow');
+                          window.open(arr.url,'_blank' );
+                      } else {
+                          $('#success').hide('slow');
+                          $('#error').show('slow');
+                      }
+                      $('#attendance_info').html('');
+                  }
+              });
+          }
         }
     </script>
   </body>

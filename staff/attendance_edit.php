@@ -174,8 +174,9 @@ $connection->connectToDatabase();
                                             $start_date = date_create($from_date);
                                             $end_date   = date_create($to_date);
 
-                                            $interval = DateInterval::createFromDateString('1 day');
-                                            $daterange = new DatePeriod($start_date, $interval ,$end_date);
+                                            // $interval = DateInterval::createFromDateString('1 day');
+                                            // $daterange = new DatePeriod($start_date, $interval ,$end_date);
+                                            $daterange = new DatePeriod(new DateTime($from_date),new DateInterval('P1D'),(new DateTime($to_date))->modify("+1 second"));
                                             ?>
                                             <input type="hidden" id="year" name="year" value="<?php echo $row['year']; ?>" />
                                             <input type="hidden" id="month" name="month" value="<?php echo $row['month']; ?>" />
@@ -231,10 +232,10 @@ $connection->connectToDatabase();
                                                             <input type="text" id="date_<?php echo $count; ?>" name="date_<?php echo $count; ?>" value="<?php echo $date1->format('Y-m-d'); ?>" readonly />
                                                         </td>
                                                         <td>
-                                                            <input type="time" id="start_time_<?php echo $count; ?>" name="start_time_<?php echo $count; ?>" value="<?php echo $row['start_time'] ?>" />
+                                                            <input type="time" id="start_time_<?php echo $count; ?>" name="start_time_<?php echo $count; ?>" value="<?php if($row['start_time']!='00:00:00'){ echo $row['start_time']; } ?>" />
                                                         </td>
                                                         <td>
-                                                            <input type="time" id="end_time_<?php echo $count; ?>" name="end_time_<?php echo $count; ?>" value="<?php echo $row['end_tme'] ?>" />
+                                                            <input type="time" id="end_time_<?php echo $count; ?>" name="end_time_<?php echo $count; ?>" value="<?php if($row['end_tme']!='00:00:00'){ echo $row['end_tme']; } ?>" />
                                                         </td>
                                                         <td>
                                                             <input type="checkbox" id="night_<?php echo $count; ?>" name="night_<?php echo $count; ?>" <?php if(isset($row['night']) && $row['night'] == 1){ echo 'checked'; } else {echo ''; }; ?> />
